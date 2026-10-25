@@ -176,9 +176,32 @@ export default function RunReward() {
             </div>
           }
         >
-          <div class={buttonContainerClass}>
-            <ShopButton hue="dot" onPointerDown={onContinue}>
-              {t.common.goToShop()}
+          <div
+            class={buttonContainerClass}
+            style={{
+              display: "flex",
+              "justify-content": "center",
+              "align-items": "center",
+              width: "100%",
+              "margin-top": "12px",
+            }}
+          >
+            <ShopButton
+              hue="dot"
+              onPointerDown={onContinue}
+              style={{
+                "min-width": "240px",
+                "font-size": "1.2rem",
+                padding: "14px 28px",
+                "border-radius": "14px",
+                display: "flex",
+                "align-items": "center",
+                "justify-content": "center",
+                gap: "10px",
+                "box-shadow": "0 6px 20px rgba(0,0,0,0.35)",
+              }}
+            >
+              <span>{t.common.goToShop()}</span>
               <ArrowRight />
             </ShopButton>
           </div>

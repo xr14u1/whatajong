@@ -3,6 +3,7 @@ import { ShopButton } from "@/components/button"
 import { BasicTile } from "@/components/game/basicTile"
 import { Reward, Rotate, Shop, Star } from "@/components/icon"
 import { useTranslation } from "@/i18n/useTranslation"
+import { api } from "@/lib/api"
 import type { CardId } from "@/lib/game"
 import { getPenalty } from "@/lib/game"
 import { captureEvent } from "@/lib/observability"
@@ -97,6 +98,9 @@ export default function RunGameOver() {
 
   onMount(() => {
     play(win() ? "won" : "lost")
+    if (win()) {
+      api.recordGameWin(totalPoints(), run.round)
+    }
     captureEvent("game_over", {
       win: win(),
       points: totalPoints(),
@@ -186,29 +190,66 @@ export default function RunGameOver() {
           <Item label={t.common.objective()}>{round().pointObjective}</Item>
         </List>
       </div>
-      <div class={buttonsClass}>
+      <div
+        class={buttonsClass}
+        style={{
+          display: "flex",
+          "justify-content": "center",
+          "align-items": "center",
+          width: "100%",
+          "margin-top": "12px",
+          "z-index": 10,
+        }}
+      >
         <Show
           when={win()}
           fallback={
-            <ShopButton hue="crack" onPointerDown={retrySameRound}>
-              {t.gameOver.trySameRun()}
+            <ShopButton
+              hue="crack"
+              onPointerDown={retrySameRound}
+              style={{
+                "min-width": "240px",
+                "font-size": "1.2rem",
+                padding: "14px 28px",
+                "border-radius": "14px",
+                display: "flex",
+                "align-items": "center",
+                "justify-content": "center",
+                gap: "10px",
+              }}
+            >
+              <span>{t.gameOver.trySameRun()}</span>
               <Rotate />
             </ShopButton>
           }
         >
-          <ShopButton hue="bam" onPointerDown={() => goToNextRound()}>
+          <ShopButton
+            hue="bam"
+            onPointerDown={() => goToNextRound()}
+            style={{
+              "min-width": "240px",
+              "font-size": "1.2rem",
+              padding: "14px 28px",
+              "border-radius": "14px",
+              display: "flex",
+              "align-items": "center",
+              "justify-content": "center",
+              gap: "10px",
+              "box-shadow": "0 6px 20px rgba(0,0,0,0.35)",
+            }}
+          >
             <Switch>
               <Match when={nextRoundStage() === "shop"}>
                 <Shop />
-                {t.common.goToShop()}
+                <span>{t.common.goToShop()}</span>
               </Match>
               <Match when={nextRoundStage() === "reward"}>
                 <Reward />
-                {t.common.reward()}
+                <span>{t.common.reward()}</span>
               </Match>
               <Match when={nextRoundStage() === "end"}>
                 <Star />
-                {t.common.celebrate()}
+                <span>{t.common.celebrate()}</span>
               </Match>
             </Switch>
           </ShopButton>

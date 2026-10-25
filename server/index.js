@@ -484,7 +484,7 @@ app.post('/api/shop/stars-invoice', async (req, res) => {
   // Fallback direct invoice link for testing
   res.json({
     success: true,
-    invoiceLink: `https://t.me/${config.bot_username || 'WhatajongBot'}?start=stars_${item.id}`,
+    invoiceLink: "",
     title,
     priceStars,
     simulated: true,
@@ -547,6 +547,16 @@ app.post('/api/shop/fulfill-stars', (req, res) => {
     profile,
   });
 });
+
+// 11. Serve Production Frontend Static Files (from dist/)
+const distPath = path.join(__dirname, '../dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(distPath, 'index.html'));
+  });
+}
 
 // ----------------------------------------------------
 // Start Server

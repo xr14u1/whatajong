@@ -85,13 +85,23 @@ export function Home() {
     <div class={homeClass}>
       <Frame />
 
-      {/* Telegram Mini App Top Status Bar */}
-      <TmaHeader
-        onOpenProfile={() => setOpenProfile(true)}
-        onOpenStreak={() => setOpenStreak(true)}
-        onOpenShop={() => setOpenShop(true)}
-        onOpenLeaderboard={() => setOpenLeaderboard(true)}
-      />
+      {/* Telegram Mini App Top Status Bar with Safe Area */}
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          "justify-content": "center",
+          "padding-top": "max(calc(env(safe-area-inset-top, 0px) + 46px), 54px)",
+          "z-index": 10,
+        }}
+      >
+        <TmaHeader
+          onOpenProfile={() => setOpenProfile(true)}
+          onOpenStreak={() => setOpenStreak(true)}
+          onOpenShop={() => setOpenShop(true)}
+          onOpenLeaderboard={() => setOpenLeaderboard(true)}
+        />
+      </div>
 
       <h1 class={titleClass} style={{ "z-index": 3 }}>Whatajong</h1>
 

@@ -123,6 +123,12 @@ export function AssistsBar(props: { tileDb: TileDb; game: Game }) {
           display: "flex",
           "align-items": "center",
           gap: "6px",
+          background: "rgba(255, 253, 249, 0.88)",
+          "backdrop-filter": "blur(8px)",
+          padding: "4px 8px",
+          "border-radius": "20px",
+          border: "1px solid rgba(0, 0, 0, 0.12)",
+          "box-shadow": "0 4px 16px rgba(0, 0, 0, 0.15)",
           "z-index": 10,
         }}
       >

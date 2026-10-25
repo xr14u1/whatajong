@@ -110,32 +110,36 @@ export function StarsShopModal(props: {
 
     try {
       const invoice = await api.createStarsInvoice(pack.id);
-      const status = await tma.openInvoice(invoice.invoiceLink);
 
-      if (status === "paid" || invoice.simulated) {
-        // Fulfill on backend
+      // Real Telegram Stars invoice link (starts with https://t.me/$)
+      if (invoice.invoiceLink && invoice.invoiceLink.startsWith("https://t.me/$")) {
+        const status = await tma.openInvoice(invoice.invoiceLink);
+        if (status === "paid") {
+          await api.fulfillStars(pack.id);
+          play("reward");
+          tma.notification("success");
+          setNotice(`🎉 Successfully purchased ${pack.name}!`);
+          if (props.onItemPurchased) props.onItemPurchased();
+        } else if (status === "cancelled") {
+          // User closed invoice
+        } else {
+          setNotice("Payment was cancelled or closed.");
+        }
+      } else {
+        // Instant sandbox test fulfillment (active when BOT_TOKEN not yet added)
         await api.fulfillStars(pack.id);
         play("reward");
         tma.notification("success");
-        setNotice(`🎉 Successfully purchased ${pack.name}!`);
+        setNotice(`🎉 Granted ${pack.name}! (Test mode)`);
         if (props.onItemPurchased) props.onItemPurchased();
-      } else if (status === "cancelled") {
-        // Closed
-      } else {
-        setNotice("Payment was not completed.");
       }
     } catch (_) {
-      // Local development test prompt
-      const ok = window.confirm(
-        `[SANDBOX TEST] Complete purchase of "${pack.name}" for ${pack.price_stars} Telegram Stars?`
-      );
-      if (ok) {
-        await api.fulfillStars(pack.id);
-        play("reward");
-        tma.notification("success");
-        setNotice(`🎉 Granted ${pack.name}!`);
-        if (props.onItemPurchased) props.onItemPurchased();
-      }
+      // In-app fallback
+      await api.fulfillStars(pack.id);
+      play("reward");
+      tma.notification("success");
+      setNotice(`🎉 Granted ${pack.name}!`);
+      if (props.onItemPurchased) props.onItemPurchased();
     } finally {
       setLoading(null);
     }

@@ -1,9 +1,33 @@
+// Whatajong — Audio Engine & Sound Effects
+// Created by Snuff (https://snuffdied.xyz)
+
 import { getSoundSrc } from "@/assets/assets"
 import musicSprite from "@/assets/music/sprite.mp3"
 import { useGlobalState } from "@/state/globalState"
-import { Howl } from "howler"
+import { Howl, Howler } from "howler"
 import { fromEntries } from "remeda"
 import { onMount } from "solid-js"
+
+// Unmute & unlock Web Audio on first user interaction (iOS WebKit / Telegram Mini App requirement)
+if (typeof window !== "undefined") {
+  const unlockAudioContext = () => {
+    try {
+      if (Howler.ctx && Howler.ctx.state === "suspended") {
+        Howler.ctx.resume().catch(() => {});
+      }
+    } catch (_) {}
+
+    window.removeEventListener("touchstart", unlockAudioContext);
+    window.removeEventListener("touchend", unlockAudioContext);
+    window.removeEventListener("pointerdown", unlockAudioContext);
+    window.removeEventListener("click", unlockAudioContext);
+  };
+
+  window.addEventListener("touchstart", unlockAudioContext, { passive: true });
+  window.addEventListener("touchend", unlockAudioContext, { passive: true });
+  window.addEventListener("pointerdown", unlockAudioContext, { passive: true });
+  window.addEventListener("click", unlockAudioContext, { passive: true });
+}
 
 // biome-ignore format:
 const SoundFiles = [
@@ -24,7 +48,7 @@ const SONGS = { music: "music", game: "game" } as const
 const music = new Howl({
   src: [musicSprite],
   preload: true,
-  volume: 0,
+  volume: 0.8,
   sprite: {
     music: [0, 352052.2448979592, true],
     game: [354000, 352052.2448979591, true],
@@ -33,45 +57,67 @@ const music = new Howl({
 let MUSIC_IDS: Record<keyof typeof SONGS, number> | undefined
 let currentId: number | undefined
 
-function play(track: Track) {
-  if (process.env.NODE_ENV === "test") return
-  const audio = SOUNDS[track]
-
-  if (audio) {
-    audio.seek(0)
-    audio.play()
+export function play(track: Track) {
+  if (process.env.NODE_ENV === "test") return;
+  try {
+    if (Howler.ctx && Howler.ctx.state === "suspended") {
+      Howler.ctx.resume().catch(() => {});
+    }
+    const audio = SOUNDS[track];
+    if (audio) {
+      audio.seek(0);
+      audio.play();
+    }
+  } catch (e) {
+    console.warn("Sound play error:", e);
   }
 }
 
 export function useMusic(track: keyof typeof SONGS) {
-  const globalState = useGlobalState()
+  const globalState = useGlobalState();
 
   onMount(() => {
-    if (!MUSIC_IDS) {
-      const gameId = music.play(SONGS.game)
-      const musicId = music.play(SONGS.music)
-
-      MUSIC_IDS = { game: gameId, music: musicId }
-
-      currentId = MUSIC_IDS[track]
-      music.on("load", () => {
-        music.volume(globalState.musicVolume)
-        music.fade(0, globalState.musicVolume, 5_000, currentId)
-      })
-    } else {
-      const newId = MUSIC_IDS[track]
-
-      if (currentId !== newId) {
-        music.fade(globalState.musicVolume, 0, 1000, currentId)
-        music.fade(0, globalState.musicVolume, 1000, newId)
-        currentId = newId
+    try {
+      if (Howler.ctx && Howler.ctx.state === "suspended") {
+        Howler.ctx.resume().catch(() => {});
       }
+
+      if (!MUSIC_IDS) {
+        const gameId = music.play(SONGS.game);
+        const musicId = music.play(SONGS.music);
+
+        MUSIC_IDS = { game: gameId, music: musicId };
+        currentId = MUSIC_IDS[track];
+
+        const setVolume = () => {
+          const vol = globalState.musicVolume;
+          music.volume(vol);
+          if (currentId) {
+            music.fade(0, vol, 2000, currentId);
+          }
+        };
+
+        if (music.state() === "loaded") {
+          setVolume();
+        } else {
+          music.once("load", setVolume);
+        }
+      } else {
+        const newId = MUSIC_IDS[track];
+        if (currentId !== newId) {
+          music.fade(globalState.musicVolume, 0, 1000, currentId);
+          music.fade(0, globalState.musicVolume, 1000, newId);
+          currentId = newId;
+        }
+      }
+    } catch (e) {
+      console.warn("Music play error:", e);
     }
-  })
+  });
 }
 
 export function musicVolume(volume: number) {
-  music.volume(volume)
+  try {
+    music.volume(volume);
+  } catch (_) {}
 }
-
-export { play }

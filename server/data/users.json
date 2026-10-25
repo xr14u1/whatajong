@@ -1,4 +1,29 @@
 {
+  "10001": {
+    "id": "10001",
+    "telegramId": "10001",
+    "username": "player",
+    "firstName": "Player",
+    "photoUrl": "",
+    "level": 1,
+    "xp": 0,
+    "coins": 300,
+    "stars": 0,
+    "starPoints": 50,
+    "hints": 0,
+    "shuffles": 0,
+    "streak": {
+      "current": 1,
+      "longest": 1,
+      "lastClaimDate": ""
+    },
+    "stats": {
+      "gamesPlayed": 0,
+      "gamesWon": 0,
+      "bestScore": 0
+    },
+    "inventory": []
+  },
   "8829104": {
     "id": "8829104",
     "telegramId": "8829104",
@@ -9,7 +34,7 @@
     "coins": 500,
     "stars": 0,
     "starPoints": 50,
-    "hints": 69,
+    "hints": 184,
     "shuffles": 0,
     "streak": {
       "current": 2,

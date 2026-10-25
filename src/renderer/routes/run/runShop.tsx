@@ -50,7 +50,6 @@ import {
   bamClass,
   closeButtonClass,
   coinsClass,
-  continueClass,
   crackClass,
   deckItemClass,
   deckRowsClass,
@@ -108,6 +107,7 @@ export default function RunShop() {
         <Tutorial />
         <Header />
         <Items />
+        <ContinueSection />
         <DeckArea />
       </div>
     </div>
@@ -537,6 +537,38 @@ function Items() {
 
 function Header() {
   const run = useRunState()
+  const t = useTranslation()
+
+  return (
+    <div class={shopHeaderClass}>
+      <div class={shopHeaderItemsClass}>
+        <Menu />
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          "align-items": "center",
+          gap: "8px",
+          background: "rgba(255,255,255,0.85)",
+          padding: "6px 14px",
+          "border-radius": "14px",
+          border: "1px solid rgba(0,0,0,0.1)",
+          "font-weight": "800",
+          "font-size": "13px",
+          color: "#78350f",
+        }}
+      >
+        <span>{t.common.roundN({ round: run.round })}</span>
+        <span>•</span>
+        <span>{t.common.coins()}: ${run.money}</span>
+      </div>
+    </div>
+  )
+}
+
+function ContinueSection() {
+  const run = useRunState()
   const deck = useDeckState()
   const t = useTranslation()
   const tiles = useTileState()
@@ -553,17 +585,34 @@ function Header() {
   }
 
   return (
-    <div class={shopHeaderClass}>
-      <div class={shopHeaderItemsClass}>
-        <Menu />
-      </div>
-
-      <div class={continueClass}>
-        <ShopButton hue="bone" onPointerDown={continueRun}>
-          {t.common.roundN({ round: run.round + 1 })}
-          <ArrowRight />
-        </ShopButton>
-      </div>
+    <div
+      style={{
+        display: "flex",
+        "justify-content": "center",
+        "align-items": "center",
+        width: "100%",
+        padding: "6px 0",
+        "z-index": 10,
+      }}
+    >
+      <ShopButton
+        hue="bam"
+        onPointerDown={continueRun}
+        style={{
+          "min-width": "260px",
+          "font-size": "1.25rem",
+          padding: "12px 28px",
+          "border-radius": "14px",
+          display: "flex",
+          "align-items": "center",
+          "justify-content": "center",
+          gap: "10px",
+          "box-shadow": "0 6px 20px rgba(0,0,0,0.35)",
+        }}
+      >
+        <span>{t.common.roundN({ round: run.round + 1 })}</span>
+        <ArrowRight />
+      </ShopButton>
     </div>
   )
 }

@@ -144,32 +144,44 @@ export default function RunGame() {
           comboAnimation: comboAnimation() as any,
         })}
       >
+        {/* Top HUD with Safe Area below iPhone Notch and Telegram Header */}
         <div
-          class={containerClass({
-            position: "topLeft",
-            orientation: orientation(),
-          })}
+          style={{
+            position: "absolute",
+            top: "max(calc(env(safe-area-inset-top, 0px) + 48px), 54px)",
+            left: "0",
+            right: "0",
+            display: "flex",
+            "align-items": "center",
+            "justify-content": "space-between",
+            padding: "0 14px",
+            "z-index": 10,
+            "pointer-events": "none",
+          }}
         >
-          <div
-            style={{
-              display: "flex",
-              "align-items": "center",
-              gap: "8px",
-              "flex-wrap": "wrap",
-            }}
-          >
+          <div style={{ "pointer-events": "auto" }}>
             <Menu />
-            <AssistsBar tileDb={tiles} game={game} />
+          </div>
+          <div style={{ "pointer-events": "auto" }}>
+            <TopRight />
           </div>
         </div>
+
+        {/* Bottom Floating Assists Bar: Centered Hint, Shuffle, and Stars Shop */}
         <div
-          class={containerClass({
-            position: "topRight",
-            orientation: orientation(),
-            sudo: game.tutorialStep === 1,
-          })}
+          style={{
+            position: "absolute",
+            bottom: "max(calc(env(safe-area-inset-bottom, 0px) + 8px), 12px)",
+            left: "50%",
+            transform: "translateX(-50%)",
+            display: "flex",
+            "align-items": "center",
+            "justify-content": "center",
+            "z-index": 10,
+            "pointer-events": "auto",
+          }}
         >
-          <TopRight />
+          <AssistsBar tileDb={tiles} game={game} />
         </div>
         <div
           style={{

@@ -159,11 +159,11 @@ export const containerClass = recipe({
       },
       bottomLeft: {
         left: 0,
-        bottom: 0,
+        bottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
       },
       bottomRight: {
         right: 0,
-        bottom: 0,
+        bottom: "max(env(safe-area-inset-bottom, 0px), 8px)",
       },
     },
   },

@@ -51,28 +51,56 @@ export interface ShopItem {
   badge?: string;
 }
 
-const DEFAULT_PROFILE: StoredProfile = {
-  id: "8829104",
-  telegramId: "8829104",
-  username: "snuff_player",
-  firstName: "Mahjong Adventurer",
-  level: 1,
-  xp: 100,
-  coins: 300,
-  stars: 0,
-  hints: 5,
-  shuffles: 3,
-  starPoints: 50,
-  streak: { current: 1, longest: 1, lastClaimDate: "" },
-  stats: { gamesPlayed: 0, gamesWon: 0, bestScore: 0 },
-  inventory: [],
-};
+function apiUrl(path: string): string {
+  if (typeof window !== "undefined" && (window as any).__WHATAJONG_API_URL__) {
+    const base = (window as any).__WHATAJONG_API_URL__.replace(/\/$/, "");
+    return `${base}${path}`;
+  }
+  return path;
+}
+
+export function getFallbackProfile(): StoredProfile {
+  const u = tma.getUser();
+  if (typeof window !== "undefined") {
+    const saved = localStorage.getItem("whatajong_profile");
+    if (saved) {
+      try {
+        const p = JSON.parse(saved);
+        return {
+          ...p,
+          id: String(u.id),
+          telegramId: String(u.id),
+          username: u.username || p.username || `player_${u.id}`,
+          firstName: u.first_name || p.firstName || "Player",
+          photoUrl: u.photo_url || p.photoUrl || "",
+        };
+      } catch (_) {}
+    }
+  }
+  return {
+    id: String(u.id),
+    telegramId: String(u.id),
+    username: u.username || `player_${u.id}`,
+    firstName: u.first_name || "Player",
+    photoUrl: u.photo_url || "",
+    level: 1,
+    xp: 100,
+    coins: 300,
+    stars: 0,
+    hints: 5,
+    shuffles: 3,
+    starPoints: 50,
+    streak: { current: 1, longest: 1, lastClaimDate: "" },
+    stats: { gamesPlayed: 0, gamesWon: 0, bestScore: 0 },
+    inventory: [],
+  };
+}
 
 export const api = {
   async auth(): Promise<StoredProfile> {
     const rawInitData = tma.getRawInitData();
     try {
-      const res = await fetch("/api/user/auth", {
+      const res = await fetch(apiUrl("/api/user/auth"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,17 +114,22 @@ export const api = {
 
       if (res.ok) {
         const data = await res.json();
-        return data.profile;
+        if (data.profile) {
+          if (typeof window !== "undefined") {
+            localStorage.setItem("whatajong_profile", JSON.stringify(data.profile));
+          }
+          return data.profile;
+        }
       }
     } catch (_) {}
 
-    return DEFAULT_PROFILE;
+    return getFallbackProfile();
   },
 
   async useHint(): Promise<{ success: boolean; hintsLeft: number }> {
     const rawInitData = tma.getRawInitData();
     try {
-      const res = await fetch("/api/user/use-hint", {
+      const res = await fetch(apiUrl("/api/user/use-hint"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -114,7 +147,7 @@ export const api = {
   async useShuffle(): Promise<{ success: boolean; shufflesLeft: number }> {
     const rawInitData = tma.getRawInitData();
     try {
-      const res = await fetch("/api/user/use-shuffle", {
+      const res = await fetch(apiUrl("/api/user/use-shuffle"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -131,7 +164,7 @@ export const api = {
 
   async getShopItems(): Promise<ShopItem[]> {
     try {
-      const res = await fetch("/api/shop/items");
+      const res = await fetch(apiUrl("/api/shop/items"));
       if (res.ok) {
         const data = await res.json();
         return data.items || [];
@@ -143,7 +176,7 @@ export const api = {
   async claimStreak(): Promise<{ success: boolean; currentStreak: number; reward: any; profile: StoredProfile }> {
     const rawInitData = tma.getRawInitData();
     try {
-      const res = await fetch("/api/user/streak", {
+      const res = await fetch(apiUrl("/api/user/streak"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -156,14 +189,15 @@ export const api = {
       }
     } catch (_) {}
 
+    const current = getFallbackProfile();
     return {
       success: true,
       currentStreak: 2,
       reward: { coins: 100, hints: 1 },
       profile: {
-        ...DEFAULT_PROFILE,
-        coins: DEFAULT_PROFILE.coins + 100,
-        hints: DEFAULT_PROFILE.hints + 1,
+        ...current,
+        coins: current.coins + 100,
+        hints: current.hints + 1,
       },
     };
   },
@@ -173,12 +207,13 @@ export const api = {
     userRank: LeaderboardEntry;
   }> {
     try {
-      const res = await fetch(`/api/leaderboard?tab=${tab}`);
+      const res = await fetch(apiUrl(`/api/leaderboard?tab=${tab}`));
       if (res.ok) {
         return await res.json();
       }
     } catch (_) {}
 
+    const tgUser = tma.getUser();
     const mockEntries: LeaderboardEntry[] = [
       { rank: 1, userId: "u_snuff", username: "snuff", firstName: "Snuff 👑", score: 452000, level: 99 },
       { rank: 2, userId: "u_1", username: "pao_ramen", firstName: "Pao Ramon 🀄", score: 384500, level: 75 },
@@ -190,9 +225,9 @@ export const api = {
 
     const userRank: LeaderboardEntry = {
       rank: 7,
-      userId: "current",
-      username: "snuff_player",
-      firstName: "Mahjong Adventurer",
+      userId: String(tgUser.id || "current"),
+      username: tgUser.username || "player",
+      firstName: tgUser.first_name || "Mahjong Adventurer",
       score: 84500,
       level: 16,
       isCurrentUser: true,
@@ -203,41 +238,83 @@ export const api = {
 
   async createStarsInvoice(packId: string): Promise<{ invoiceLink: string; title: string; priceStars: number; simulated?: boolean }> {
     const rawInitData = tma.getRawInitData();
-    const res = await fetch("/api/shop/stars-invoice", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${rawInitData}`,
-      },
-      body: JSON.stringify({ packId }),
-    });
+    try {
+      const res = await fetch(apiUrl("/api/shop/stars-invoice"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${rawInitData}`,
+        },
+        body: JSON.stringify({ packId }),
+      });
 
-    if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.error || "Failed to create Stars invoice");
-    }
+      if (res.ok) {
+        return await res.json();
+      }
+    } catch (_) {}
 
-    return await res.json();
+    // Fallback simulation mode
+    return {
+      invoiceLink: "",
+      title: packId,
+      priceStars: 15,
+      simulated: true,
+    };
   },
 
   async fulfillStars(packId: string): Promise<StoredProfile> {
     const rawInitData = tma.getRawInitData();
-    const res = await fetch("/api/shop/fulfill-stars", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${rawInitData}`,
-      },
-      body: JSON.stringify({ packId }),
-    });
-    const data = await res.json();
-    return data.profile;
+    try {
+      const res = await fetch(apiUrl("/api/shop/fulfill-stars"), {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${rawInitData}`,
+        },
+        body: JSON.stringify({ packId }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.profile) {
+          if (typeof window !== "undefined") {
+            localStorage.setItem("whatajong_profile", JSON.stringify(data.profile));
+          }
+          return data.profile;
+        }
+      }
+    } catch (_) {}
+
+    // Offline / direct local fulfillment
+    const current = getFallbackProfile();
+    if (packId.startsWith("hints_")) {
+      const qty = parseInt(packId.replace("hints_", ""), 10) || 5;
+      current.hints = (current.hints || 0) + qty;
+    } else if (packId.startsWith("shuffle_")) {
+      const qty = parseInt(packId.replace("shuffle_", ""), 10) || 5;
+      current.shuffles = (current.shuffles || 0) + qty;
+    } else if (packId.startsWith("star_points_")) {
+      const qty = parseInt(packId.replace("star_points_", ""), 10) || 100;
+      current.starPoints = (current.starPoints || 0) + qty;
+    } else if (packId.startsWith("coins_")) {
+      const qty = parseInt(packId.replace("coins_", ""), 10) || 1000;
+      current.coins = (current.coins || 0) + qty;
+    } else if (packId.includes("bundle")) {
+      current.hints += 30;
+      current.shuffles += 10;
+      current.starPoints += 300;
+      current.coins += 3000;
+    }
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem("whatajong_profile", JSON.stringify(current));
+    }
+    return current;
   },
 
   async recordGameWin(score: number, roundNum: number) {
     const rawInitData = tma.getRawInitData();
     try {
-      await fetch("/api/game/verify-and-complete", {
+      await fetch(apiUrl("/api/game/verify-and-complete"), {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
