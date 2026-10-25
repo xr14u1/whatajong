@@ -1,0 +1,80 @@
+[
+  {
+    "id": "hints_5",
+    "name": "5 Hints Pack",
+    "description": "Instantly highlights a free matching pair of tiles",
+    "type": "hint",
+    "quantity": 5,
+    "price_stars": 15,
+    "icon": "💡",
+    "badge": "STARTER"
+  },
+  {
+    "id": "hints_15",
+    "name": "15 Hints Bundle",
+    "description": "Essential tactical kit for difficult levels",
+    "type": "hint",
+    "quantity": 15,
+    "price_stars": 35,
+    "icon": "💡",
+    "badge": "POPULAR"
+  },
+  {
+    "id": "hints_50",
+    "name": "50 Hints Vault",
+    "description": "Massive cache of hints to never get stuck",
+    "type": "hint",
+    "quantity": 50,
+    "price_stars": 100,
+    "icon": "💡",
+    "badge": "BEST VALUE"
+  },
+  {
+    "id": "shuffle_5",
+    "name": "5 Board Shuffles",
+    "description": "Rearranges alive tiles to guarantee fresh matching pairs",
+    "type": "shuffle",
+    "quantity": 5,
+    "price_stars": 20,
+    "icon": "🔀"
+  },
+  {
+    "id": "star_points_100",
+    "name": "100 Star Points",
+    "description": "In-game Star Points for prestige powerups and card unlocks",
+    "type": "star_points",
+    "quantity": 100,
+    "price_stars": 50,
+    "icon": "⭐",
+    "badge": "NEW"
+  },
+  {
+    "id": "star_points_500",
+    "name": "500 Star Points",
+    "description": "Huge bundle of Star Points to unlock rare dragons & phoenixes",
+    "type": "star_points",
+    "quantity": 500,
+    "price_stars": 200,
+    "icon": "🌟",
+    "badge": "EPIC"
+  },
+  {
+    "id": "coins_1000",
+    "name": "1,000 Gold Coins",
+    "description": "Coins to purchase in-game store cards and rerolls",
+    "type": "coins",
+    "quantity": 1000,
+    "price_stars": 25,
+    "icon": "🪙"
+  },
+  {
+    "id": "snuff_archon_bundle",
+    "name": "Snuff Archon Supreme Pack",
+    "description": "3,000 Coins + 30 Hints + 10 Shuffles + 300 Star Points + Golden Dragon Sigil",
+    "type": "bundle",
+    "quantity": 1,
+    "price_stars": 150,
+    "icon": "👑",
+    "badge": "MYTHIC"
+  }
+]

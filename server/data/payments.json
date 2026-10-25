@@ -1,0 +1,65 @@
+[
+  {
+    "chargeId": "sim_1792919941926",
+    "userId": "8829104",
+    "packId": "hints_5",
+    "itemName": "5 Hints Pack",
+    "priceStars": 15,
+    "timestamp": 1792919941930,
+    "date": "2026-10-25T09:19:01.930Z"
+  },
+  {
+    "chargeId": "sim_1792920069740",
+    "userId": "8829104",
+    "packId": "hints_50",
+    "itemName": "50 Hints Vault",
+    "priceStars": 100,
+    "timestamp": 1792920069750,
+    "date": "2026-10-25T09:21:09.750Z"
+  },
+  {
+    "chargeId": "sim_1792920101656",
+    "userId": "8829104",
+    "packId": "hints_5",
+    "itemName": "5 Hints Pack",
+    "priceStars": 15,
+    "timestamp": 1792920101664,
+    "date": "2026-10-25T09:21:41.664Z"
+  },
+  {
+    "chargeId": "sim_1792920333074",
+    "userId": "8829104",
+    "packId": "hints_5",
+    "itemName": "5 Hints Pack",
+    "priceStars": 15,
+    "timestamp": 1792920333084,
+    "date": "2026-10-25T09:25:33.084Z"
+  },
+  {
+    "chargeId": "sim_1792920705950",
+    "userId": "8829104",
+    "packId": "hints_5",
+    "itemName": "5 Hints Pack",
+    "priceStars": 15,
+    "timestamp": 1792920705954,
+    "date": "2026-10-25T09:31:45.954Z"
+  },
+  {
+    "chargeId": "sim_1792921495543",
+    "userId": "8829104",
+    "packId": "hints_5",
+    "itemName": "5 Hints Pack",
+    "priceStars": 15,
+    "timestamp": 1792921495565,
+    "date": "2026-10-25T09:44:55.565Z"
+  },
+  {
+    "chargeId": "sim_1792921999245",
+    "userId": "8829104",
+    "packId": "hints_5",
+    "itemName": "5 Hints Pack",
+    "priceStars": 15,
+    "timestamp": 1792921999253,
+    "date": "2026-10-25T09:53:19.253Z"
+  }
+]

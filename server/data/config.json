@@ -1,0 +1,8 @@
+{
+  "bot_token": "YOUR_TELEGRAM_BOT_TOKEN_HERE",
+  "app_url": "https://snuffdied.xyz",
+  "port": 3002,
+  "creator_name": "Snuff",
+  "creator_url": "https://snuffdied.xyz",
+  "bot_username": "WhatajongBot"
+}

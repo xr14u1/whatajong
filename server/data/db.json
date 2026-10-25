@@ -1,0 +1,79 @@
+{
+  "users": {
+    "8829104": {
+      "id": "8829104",
+      "telegramId": "8829104",
+      "username": "whatajong_player",
+      "firstName": "Mahjong Adventurer",
+      "level": 1,
+      "xp": 50,
+      "coins": 250,
+      "stars": 0,
+      "streak": {
+        "current": 2,
+        "longest": 2,
+        "lastClaimDate": "2026-10-24"
+      },
+      "stats": {
+        "gamesPlayed": 0,
+        "gamesWon": 0,
+        "bestScore": 0
+      },
+      "inventory": []
+    }
+  },
+  "sessions": {},
+  "leaderboards": {
+    "global": [
+      {
+        "rank": 1,
+        "userId": "u_1",
+        "username": "pao_ramen",
+        "firstName": "Pao Ramon 🀄",
+        "score": 284500,
+        "level": 72
+      },
+      {
+        "rank": 2,
+        "userId": "u_2",
+        "username": "dragon_master",
+        "firstName": "Dragon Master",
+        "score": 212400,
+        "level": 58
+      },
+      {
+        "rank": 3,
+        "userId": "u_3",
+        "username": "zen_jong",
+        "firstName": "Zen Jong",
+        "score": 189100,
+        "level": 49
+      },
+      {
+        "rank": 4,
+        "userId": "u_4",
+        "username": "solitaire_king",
+        "firstName": "Solitaire King",
+        "score": 145000,
+        "level": 36
+      },
+      {
+        "rank": 5,
+        "userId": "u_5",
+        "username": "tony_t",
+        "firstName": "Tony T",
+        "score": 118000,
+        "level": 30
+      },
+      {
+        "rank": 6,
+        "userId": "u_6",
+        "username": "alex_m",
+        "firstName": "Alex M",
+        "score": 95400,
+        "level": 25
+      }
+    ]
+  },
+  "payments": []
+}

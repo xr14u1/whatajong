@@ -1,0 +1,65 @@
+[
+  {
+    "rank": 1,
+    "userId": "u_snuff",
+    "username": "snuff",
+    "firstName": "Snuff 👑",
+    "score": 452000,
+    "level": 99,
+    "avatar": "phoenix"
+  },
+  {
+    "rank": 2,
+    "userId": "u_1",
+    "username": "pao_ramen",
+    "firstName": "Pao Ramon 🀄",
+    "score": 384500,
+    "level": 75,
+    "avatar": "dragonr"
+  },
+  {
+    "rank": 3,
+    "userId": "u_2",
+    "username": "dragon_slayer",
+    "firstName": "Dragon Slayer",
+    "score": 298400,
+    "level": 62,
+    "avatar": "dragong"
+  },
+  {
+    "rank": 4,
+    "userId": "u_3",
+    "username": "zen_master",
+    "firstName": "Zen Master",
+    "score": 215100,
+    "level": 51,
+    "avatar": "dragonb"
+  },
+  {
+    "rank": 5,
+    "userId": "u_4",
+    "username": "solitaire_king",
+    "firstName": "Solitaire King",
+    "score": 165000,
+    "level": 38,
+    "avatar": "bam1"
+  },
+  {
+    "rank": 6,
+    "userId": "u_5",
+    "username": "tony_t",
+    "firstName": "Tony T",
+    "score": 128000,
+    "level": 32,
+    "avatar": "dot1"
+  },
+  {
+    "rank": 7,
+    "userId": "u_6",
+    "username": "alex_m",
+    "firstName": "Alex M",
+    "score": 98400,
+    "level": 26,
+    "avatar": "crack1"
+  }
+]

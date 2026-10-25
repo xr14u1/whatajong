@@ -1,0 +1,10 @@
+{
+  "include": ["vite.config.*"],
+  "compilerOptions": {
+    "composite": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "skipLibCheck": true
+  }
+}
